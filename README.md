@@ -1,4 +1,3 @@
-# Dimigo_Miner_Gallery
-디마갤 Node.JS 개발일기
+# Gachi.ga
 
-사라진 디마갤이 너무 아쉬워서 만들어보기로 했다.
+I hate I cost all my taxi fee...
