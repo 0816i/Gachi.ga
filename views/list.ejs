@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title><%= title %></title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <%- include('./general/data') %>
+    <!--Main Navigation-->
+    <header>
+        <%- include('./general/nav') %>
+    </header>
+    <div class="container">
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">도착지</th>
+                    <th scope="col">인원</th>
+                    <th scope="col">호스트</th>
+                    <th scope="col">일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>수원역</td>
+                    <td>2/4</td>
+                    <td>오종혁</td>
+                    <td>2020.09.11</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>광명역</td>
+                    <td>1/4</td>
+                    <td>류성민</td>
+                    <td>2020.09.11</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>경기광주역</td>
+                    <td>2/4</td>
+                    <td>박상욱</td>
+                    <td>2020.09.11</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <%- include('./general/footer') %>
+</body>
+
+</html>

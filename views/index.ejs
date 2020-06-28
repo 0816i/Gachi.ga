@@ -2,10 +2,45 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style>
+      .view{
+        background-image: url('https://upload.wikimedia.org/wikipedia/ko/d/dc/Dimigo-Main.png');
+        background-size: cover;
+        background-position: 50%;
+        margin-top: -56px;
+      }
+      .navbar{
+        z-index: 1;
+      }
+      html,
+      body,
+      header,
+      .view{
+        height: 100%;
+      }
+    </style>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <%- include('./general/data') %>
+    <!--Main Navigation-->
+    <header>
+      <%- include('./general/nav') %>
+    
+      <div class="view intro-2 animated bounceIn">
+        <div class="full-bg-img">
+          <div class="mask rgba-black-strong flex-center">
+            <div class="container">
+              <div class="white-text text-center wow fadeInUp">
+                <h2>교통비를 더 저렴하게!</h2>
+                <h5>같은 목적지를 가는 친구와 택시비를 n빵해 보세요!</h5>
+                <br>
+                <p>여러분들의 저렴하고 안전한 귀가를 액션빔!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <%- include('./general/footer') %> 
   </body>
 </html>
