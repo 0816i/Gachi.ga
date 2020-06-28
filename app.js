@@ -9,6 +9,18 @@ var usersRouter = require('./routes/users');
 const { request } = require('http');
 const req = require('request');
 
+const mongoose = require('mongoose');
+mongoose.connect("mongodb://localhost/test", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "Connection Error!"));
+db.once("open", function () {
+  console.log("Database Connected");
+});
+
 var app = express();
 
 // view engine setup
