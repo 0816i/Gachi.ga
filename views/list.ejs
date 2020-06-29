@@ -53,7 +53,7 @@
                     <tbody>
                         <% result.forEach((data)=>{ %>
                             <tr>
-                                <th><%= data.dest %></th>
+                                <th><a href="/detail/<%= data._id%>"><%= data.dest %></a></th>
                                 <th><%= data.now+'/'+data.fill%></th>
                                 <th><%= data.name %></th>
                                 <th><%= data.grade %></th>
