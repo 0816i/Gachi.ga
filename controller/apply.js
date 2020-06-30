@@ -1,4 +1,5 @@
 const Godata = require("../models/godata");
+const { response } = require("express");
 
 const showMainPage = (req, res, next) => {
   res.render("index", { title: "메인페이지" });
@@ -17,8 +18,8 @@ const detail = async (req, res, next) => {
 };
 
 const showApplyPage = async (req, res, next) => {
-  res.render("apply", { title: "등록" };
-}
+  res.render("apply", { title: "등록" });
+};
 
 const makeapply = async (req, res, next) => {
   const { name, id, serial } = req.jwt;
@@ -59,4 +60,25 @@ const makejoin = async (req, res, next) => {
   );
 };
 
-module.exports = { showMainPage, list, detail, makeapply, makejoin, showApplyPage };
+const applydelete = async (req, res, next) => {
+  const id = req.params.id;
+
+  const tmpresult = await Godata.findById(id);
+  if (tmpresult.id != req.jwt.id) {
+    return res.status(403).json({ message: "forbiden" });
+  }
+  Godata.findByIdAndDelete(id, (err, result) => {
+    if (err) next(err);
+    return res.status(201).json({ message: "Success" });
+  });
+};
+
+module.exports = {
+  showMainPage,
+  list,
+  detail,
+  makeapply,
+  makejoin,
+  showApplyPage,
+  applydelete,
+};

@@ -16,4 +16,6 @@ router.post("/apply", authChecker, wrap(control.makeapply));
 
 router.post("/apply/:id", authChecker, wrap(control.makejoin));
 
+router.delete("/delete/:id", authChecker, wrap(control.applydelete));
+
 module.exports = router;

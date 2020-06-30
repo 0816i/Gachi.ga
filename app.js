@@ -45,7 +45,7 @@ app.use(function (err, req, res, next) {
   console.log(err);
   // render the error page
   res.status(err.status || 500);
-  res.json({ message: err });
+  res.json({ message: err.message });
 });
 
 app.listen(3000, () => console.log("Server Started"));

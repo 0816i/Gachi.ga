@@ -80,42 +80,29 @@
             />
           </div>
         </div>
+        <div class="row text-align-center" style="margin-top: 10px;">
+          <div class="col">
+            <button id="deletebtn" type="button" class="btn btn-danger">
+              삭제
+            </button>
+          </div>
+        </div>
       </form>
     </div>
     <script>
       $(function () {
-        $("#btnModify").click((event) => {
-          event.preventDefault();
-          const dimigoid = $("#idModify").val();
-          const dimigopw = $("#pwModify").val();
+        $("#deletebtn").click((event) => {
           $.ajax({
-            uri: "/modify/<%=result._id%>",
-            type: "POST",
-            data: { dimigoid, dimigopw },
+            url: "/delete/<%= result._id %>",
+            type: "DELETE",
           })
-            .done(() => {})
-            .fail((req, status, err) => {
+            .done(() => {
+              alert("삭제 완료");
+              location.href = "/list";
+            })
+            .fail((req, status, error) => {
               alert(JSON.parse(req.responseText).message);
             });
-        });
-        $("#btnDelete").click((event) => {
-          $("#btnDelete").click((event) => {
-            event.preventDefault();
-            const dimigoid = $("#idDelete").val();
-            const dimigopw = $("#pwDelete").val();
-            $.ajax({
-              uri: "/delete/<%=result._id%>",
-              type: "DELETE",
-              data: { dimigoid, dimigopw },
-            })
-              .done(() => {})
-              .fail((req, status, err) => {
-                alert(JSON.parse(req.responseText).message);
-              });
-          });
-        });
-        $("#btnJoin").click((event) => {
-          alert("참여 클릭");
         });
       });
     </script>
