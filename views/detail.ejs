@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Detail</title>
+    <%- include('./general/data') %>
+  </head>
+  <body>
+    <!--Main Navigation-->
+    <header>
+      <%- include('./general/nav') %>
+    </header>
+    <div class="container">
+      <form
+        id="create_apply"
+        class="border border-light p-5"
+        style="margin-top: 10px;"
+      >
+        <div class="row">
+          <div class="col">
+            <label for="_id">글쓴이</label>
+            <input
+              type="text"
+              id="_id"
+              class="form-control"
+              value="<%=`${result.serial} ${result.name}`%>"
+              readonly
+            />
+          </div>
+          <div class="col">
+            <label for="_place">목적지</label>
+            <input
+              type="text"
+              id="_place"
+              class="form-control"
+              value="<%=result.dest %>"
+              readonly
+            />
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea2">상세 정보</label>
+              <textarea
+                class="form-control rounded-0"
+                id="_detail"
+                rows="10"
+                readonly
+              >
+<%= result.detail %></textarea
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="_now">인원</label>
+            <input
+              type="text"
+              id="_place"
+              class="form-control"
+              value="<%=result.now %>/<%=result.fill %>"
+              readonly
+              style="margin-bottom: 10px;"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="_now">일시</label>
+            <% time = result.date.getFullYear() +"년 " + (result.date.getMonth()
+            + 1 ) + "월 " + result.date.getDate() + "일 " +
+            result.date.getHours() + "시" + result.date.getMinutes() + "분 " %>
+            <input
+              type="text"
+              id="_place"
+              class="form-control"
+              value="<%=time %>"
+              readonly
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+    <script>
+      $(function () {
+        $("#btnModify").click((event) => {
+          event.preventDefault();
+          const dimigoid = $("#idModify").val();
+          const dimigopw = $("#pwModify").val();
+          $.ajax({
+            uri: "/modify/<%=result._id%>",
+            type: "POST",
+            data: { dimigoid, dimigopw },
+          })
+            .done(() => {})
+            .fail((req, status, err) => {
+              alert(JSON.parse(req.responseText).message);
+            });
+        });
+        $("#btnDelete").click((event) => {
+          $("#btnDelete").click((event) => {
+            event.preventDefault();
+            const dimigoid = $("#idDelete").val();
+            const dimigopw = $("#pwDelete").val();
+            $.ajax({
+              uri: "/delete/<%=result._id%>",
+              type: "DELETE",
+              data: { dimigoid, dimigopw },
+            })
+              .done(() => {})
+              .fail((req, status, err) => {
+                alert(JSON.parse(req.responseText).message);
+              });
+          });
+        });
+        $("#btnJoin").click((event) => {
+          alert("참여 클릭");
+        });
+      });
+    </script>
+  </body>
+</html>

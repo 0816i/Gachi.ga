@@ -1,85 +1,62 @@
 const Godata = require("../models/godata");
-const Apply = require("../models/apply");
-const request = require("request-promise");
-const { Template } = require("ejs");
 
-const dimigoin_token = async (dimigoid, dimigopw) => {
-  const token_options = {
-    uri: "https://api.dimigo.in/auth",
-    method: "POST",
-    body: {
-      id: dimigoid,
-      password: dimigopw,
-    },
-    json: true,
-  };
-  const dimigo_token = (await request.post(token_options)).token;
-  return dimigo_token;
-};
-
-const dimigoin_jwt = async (dimigoin_token) => {
-  const jwt_options = {
-    uri: "https://api.dimigo.in/user/jwt",
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + dimigoin_token,
-    },
-    json: true,
-  };
-  const user_profile = await request.get(jwt_options);
-  return user_profile;
+const showMainPage = (req, res, next) => {
+  res.render("index", { title: "메인페이지" });
 };
 
 const list = async (req, res, next) => {
-  const lists = await Godata.find();
-  res.render("list", { result: lists });
+  const result = await Godata.find().sort("-_id");
+  res.render("list", { result });
 };
 
 const detail = async (req, res, next) => {
   const id = req.params.id;
   const result = await Godata.findById(id);
-  res.status(200).json(result);
+
+  res.status(200).render("detail", { result });
 };
 
-const make_apply = async (req, res, next) => {
-  const { dimigoid, dimigopw, dest, detail, date, time, fill } = req.body;
-  dimigo_token = await dimigoin_token(dimigoid, dimigopw);
-  user_profile = await dimigoin_jwt(dimigo_token);
-  const { name, grade } = user_profile;
-  const go_data = await Godata.create({
+const showApplyPage = async (req, res, next) => {
+  res.render("apply", { title: "등록" };
+}
+
+const makeapply = async (req, res, next) => {
+  const { name, id, serial } = req.jwt;
+  const { dest, detail, date, time, fill } = req.body;
+
+  const create = Godata.create({
     name,
-    grade,
-    dest,
+    id,
+    serial,
     detail,
-    date: date + "T" + time + "Z",
+    dest,
     fill,
-    join: [{ name, grade }],
+    date: new Date(date + " " + time),
+    join: [req.jwt],
   });
-  res.status(200).json({ message: "Success!" });
+
+  res.status(200).json({ message: "Correct" });
 };
 
-const make_join = async (req, res, next) => {
-  const godata_id = req.params.id;
-  const { dimigoid, dimigopw } = req.body;
-  const dimigo_token = await dimigoin_token(dimigoid, dimigopw);
-  const user_profile = await dimigoin_jwt(dimigo_token);
-  const { name, grade } = user_profile;
-  const godata = await Godata.findById(godata_id);
-  const date_list = await Godata.find({ date: godata.date });
+const makejoin = async (req, res, next) => {
+  const id = req.params.id;
 
-  for (let index = 0; index < date_list.length; index++) {
-    if (date_list[index].join.indexOf({ name, grade }) != -1)
-      return res.status(401).json({ message: "already Exists" }).end();
+  const myApply = await Godata.findById(id);
+
+  if (myApply.join.indexOf(req.jwt) != -1) {
+    return res.status(401).json({ message: "Already Exists" });
   }
 
-  if (Number(godata.now) + 1 > Number(godata.fill))
-    return res.status(400).json({ message: "so many friends.." });
-  godata.join.push({ name, grade });
-  const update = await Godata.findByIdAndUpdate(godata_id, {
-    $set: { now: Number(godata.now) + 1, join: godata.join },
-  });
+  myApply.join.push(req.jwt);
 
-  res.json(update);
+  Godata.findByIdAndUpdate(
+    id,
+    { $set: { join: myApply.join } },
+    (err, result) => {
+      if (err) return res.status(501).json({ message: "Error" });
+      res.status(200).json({ message: "correct" });
+    }
+  );
 };
 
-module.exports = { list, detail, make_apply, make_join };
+module.exports = { showMainPage, list, detail, makeapply, makejoin, showApplyPage };

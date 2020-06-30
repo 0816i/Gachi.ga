@@ -1,72 +1,67 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>리스트다이마리야</title>
-        <%- include('./general/data') %>
+    <%- include('./general/data') %>
 
-    <style>
-    </style>
+    <style></style>
     <script>
-        $(document).ready(function () {
-            $('#dtBasicExample').DataTable({
-                "ordering":false
-            });
-            $('.dataTables_length').addClass('bs-select');
+      $(document).ready(function () {
+        $("#dtBasicExample").DataTable({
+          ordering: false,
         });
+        $(".dataTables_length").addClass("bs-select");
+      });
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <!--Main Navigation-->
     <header>
-        <%- include('./general/nav') %>
+      <%- include('./general/nav') %>
     </header>
-    <div class="container" style="margin-top:20px;">
-        <div class="row">
-            <div class="col">
-                <h1>귀가자 목록</h1>
-            </div>
+    <div class="container" style="margin-top: 20px;">
+      <div class="row">
+        <div class="col">
+          <h1>귀가자 목록</h1>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <a class="btn btn-primary btn-sm" href="/apply">글쓰기</a>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <a class="btn btn-primary btn-sm" href="/apply">글쓰기</a>
         </div>
-        <div class = "row">
-            <div class="col">
-                <table id="dtBasicExample" class="table text-center" width="100%">
-                    <thead>
-                        <tr>
-                            <th class="th-sm">목적지
-                            </th>
-                            <th class="th-sm">정원
-                            </th>
-                            <th class="th-sm">이름
-                            </th>
-                            <th class="th-sm">학년
-                            </th>
-                            <th class="th-sm">일시
-                            </th>
-                        </tr>                        
-                    </thead>
-                    <tbody>
-                        <% result.forEach((data)=>{ %>
-                            <tr>
-                                <th><a href="/detail/<%= data._id%>"><%= data.dest %></a></th>
-                                <th><%= data.now+'/'+data.fill%></th>
-                                <th><%= data.name %></th>
-                                <th><%= data.grade %></th>
-                                <% const month = data.date.getMonth()+1 %>
-                                <th><%= data.date.getFullYear()+'년 '+month+'월 '+data.date.getDate()+'일 '+data.date.getHours()+'시 '+data.date.getMinutes()+'분'%></th>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <table id="dtBasicExample" class="table text-center" width="100%">
+            <thead>
+              <tr>
+                <th class="th-sm">목적지</th>
+                <th class="th-sm">정원</th>
+                <th class="th-sm">이름</th>
+                <th class="th-sm">학번</th>
+                <th class="th-sm">일시</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% result.forEach((data)=>{ %>
+              <tr>
+                <th><a href="/detail/<%= data._id%>"><%= data.dest %></a></th>
+                <th><%= data.now+'/'+data.fill%></th>
+                <th><%= data.name %></th>
+                <th><%= data.serial %></th>
+                <% time = data.date.getFullYear() +"년 " + (data.date.getMonth()
+                + 1 ) + "월 " + data.date.getDate() + "일 " +
+                data.date.getHours() + "시 " + data.date.getMinutes() + "분 " %>
+                <th>
+                  <%= time %>
+                </th>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
-    
-</body>
-
+  </body>
 </html>

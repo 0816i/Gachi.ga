@@ -1,64 +1,91 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title><%= title %></title>
     <%- include('./general/data') %>
+  </head>
 
-    <style>
-    </style>
-    <script>
-        $(document).ready(function () {
-            $('#dtBasicExample').DataTable({
-                "ordering": false
-            });
-            $('.dataTables_length').addClass('bs-select');
-        });
-    </script>
-</head>
-
-<body>
+  <body>
     <!--Main Navigation-->
     <header>
-        <%- include('./general/nav') %>
+      <%- include('./general/nav') %>
     </header>
-    <div class ="container">
-        <form id="create_apply" class="border border-light p-5" style="margin-top: 10px;">
-            <div class="row">
-                <div class="col">
-                    <label for="_id">디미고인 아이디</label>
-                    <input type="text" id="_id" class="form-control">
-                </div>
-                <div class="col">
-                    <label for="_pw">디미고인 패스워드</label>
-                    <input type="text" id="_pw" class="form-control">
-                </div>
-                <div class="col">
-                    <label for="_place">목적지</label>
-                    <input type="text" id="_place" class="form-control">
-                </div>
+    <div class="container">
+      <form
+        id="create_apply"
+        class="border border-light p-5"
+        style="margin-top: 10px;"
+      >
+        <div class="row">
+          <div class="col">
+            <label for="_place">목적지</label>
+            <input type="text" id="_place" class="form-control" />
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea2">상세 정보</label>
+              <textarea
+                class="form-control rounded-0"
+                id="_detail"
+                rows="10"
+              ></textarea>
             </div>
-            <div class="row" style="margin-top: 15px;">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea2">상세 정보</label>
-                        <textarea class="form-control rounded-0" id="exampleFormControlTextarea2"></textarea>
-                    </div>
-                </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="md-form">
+              <input
+                type="number"
+                id="_number"
+                class="form-control"
+                required
+                min="1"
+              />
+              <label for="numberExample">최대 명수(본인 포함)</label>
             </div>
-            <div class="row">
-                <div class="col">
-                    <label for="date_form">날짜</label>
-                    <input type="date" id="date_form" class="form-control">
-                </div>
-                <div class="col">
-                    <label for="time_form">시간</label>
-                    <input type="time" id="time_form" class="form-control">
-                </div>
-            </div>
-            <button class="btn btn-info btn-block my-4" type="submit">글쓰기</button>
-        </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="date_form">날짜</label>
+            <input type="date" id="date_form" class="form-control" />
+          </div>
+          <div class="col">
+            <label for="time_form">시간</label>
+            <input type="time" id="time_form" class="form-control" />
+          </div>
+        </div>
+        <button class="btn btn-info btn-block my-4" type="submit">
+          글쓰기
+        </button>
+      </form>
     </div>
-</body>
-
+    <script>
+      $(function () {
+        $("#create_apply").submit((event) => {
+          event.preventDefault();
+          const dest = $("#_place").val();
+          const detail = $("#_detail").val();
+          const date = $("#date_form").val();
+          const time = $("#time_form").val();
+          const fill = $("#_number").val();
+          $.ajax({
+            url: "/apply",
+            type: "POST",
+            data: { dest, detail, date, time, fill },
+          })
+            .done(() => {
+              alert("정상!");
+              location.href = "/list";
+            })
+            .fail((req, status, err) => {
+              alert(JSON.parse(req.responseText).message);
+            });
+        });
+      });
+    </script>
+  </body>
 </html>

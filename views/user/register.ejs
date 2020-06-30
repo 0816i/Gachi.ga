@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>로그인</title>
+  </head>
+
+  <body>
+    <%- include('../general/data') %>
+    <!--Main Navigation-->
+    <header>
+      <%- include('../general/nav') %>
+    </header>
+    <div class="container">
+      <form
+        id="register"
+        class="text-center border border-light p-5"
+        style="margin-top: 20px;"
+      >
+        <p class="h4 mb-4">Register</p>
+
+        <!-- Email -->
+        <input
+          type="text"
+          id="dimigoId"
+          class="form-control mb-4"
+          placeholder="디미고 아이디"
+          required
+        />
+
+        <!-- Password -->
+        <input
+          type="password"
+          id="dimigoPw"
+          class="form-control mb-4"
+          placeholder="디미고 비밀번호"
+          required
+        />
+
+        <!-- Sign in button -->
+        <button class="btn btn-info btn-block my-4" type="submit">
+          Register
+        </button>
+
+        <!-- Register -->
+        <p>
+          Already Registered?
+          <a href="/users/login">Login</a>
+        </p>
+      </form>
+    </div>
+    <script>
+      $(function () {
+        $("#register").submit((event) => {
+          event.preventDefault();
+          const id = $("#dimigoId").val();
+          const pw = $("#dimigoPw").val();
+          $.ajax({
+            url: "/users/register",
+            type: "POST",
+            data: { id, pw },
+          })
+            .done(() => {
+              alert("정상!");
+              location.href = "/users/login";
+            })
+            .fail((request, status, error) => {
+              alert(JSON.parse(request.responseText).message);
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
