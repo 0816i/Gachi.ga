@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { model } = require("./godata");
 
 const userSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
+  id: { type: String, required: true },
   pw: { type: String, required: true, trim: true },
   name: { type: String, required: true, trim: true },
   grade: { type: Number, required: true, trim: true },

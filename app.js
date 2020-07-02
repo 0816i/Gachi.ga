@@ -8,7 +8,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const app = express();
 
-mongoose.connect("mongodb://localhost/test", {
+mongoose.connect("mongodb://localhost/gachiga", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -42,10 +42,11 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  console.log(err);
+  //console.log(err);
   // render the error page
   res.status(err.status || 500);
   res.json({ message: err.message });
+  console.log(err);
 });
 
 app.listen(3000, () => console.log("Server Started"));

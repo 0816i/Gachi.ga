@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>수정</title>
     <%- include('./general/data') %>
   </head>
 
@@ -12,25 +12,28 @@
     </header>
     <div class="container">
       <form
-        id="modify_apply"
+        id="create_apply"
         class="border border-light p-5"
         style="margin-top: 10px;"
       >
         <div class="row">
           <div class="col">
             <label for="_place">목적지</label>
-            <input type="text" id="_place" class="form-control" />
+            <input
+              type="text"
+              id="_place"
+              class="form-control"
+              value="<%= result.dest%>"
+            />
           </div>
         </div>
         <div class="row" style="margin-top: 15px;">
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlTextarea2">상세 정보</label>
-              <textarea
-                class="form-control rounded-0"
-                id="_detail"
-                rows="10"
-              ></textarea>
+              <textarea class="form-control rounded-0" id="_detail" rows="10">
+<%= result.detail %></textarea
+              >
             </div>
           </div>
         </div>
@@ -43,6 +46,7 @@
                 class="form-control"
                 required
                 min="1"
+                value="<%= result.fill%>"
               />
               <label for="numberExample">최대 명수(본인 포함)</label>
             </div>
@@ -51,21 +55,36 @@
         <div class="row">
           <div class="col">
             <label for="date_form">날짜</label>
-            <input type="date" id="date_form" class="form-control" />
+            <% var month = '0'; var day = '0'; if (result.date.getMonth()+1 <
+            10){ month = '0'+ (result.date.getMonth()+1) } else{ month =
+            (result.date.getMonth()+1) } if (result.date.getDate() < 10){ day =
+            '0'+ result.date.getDate(); } else{ day = result.date.getDate(); }
+            %>
+            <input
+              type="date"
+              id="date_form"
+              class="form-control"
+              value="<%=`${result.date.getFullYear()}-${month}-${day}`%>"
+            />
           </div>
           <div class="col">
             <label for="time_form">시간</label>
-            <input type="time" id="time_form" class="form-control" />
+            <input
+              type="time"
+              id="time_form"
+              class="form-control"
+              value="<%=`${result.date.getHours()}:${result.date.getMinutes()}`%>"
+            />
           </div>
         </div>
         <button class="btn btn-info btn-block my-4" type="submit">
-          글쓰기
+          수정하기
         </button>
       </form>
     </div>
     <script>
       $(function () {
-        $("#modify_apply").submit((event) => {
+        $("#create_apply").submit((event) => {
           event.preventDefault();
           const dest = $("#_place").val();
           const detail = $("#_detail").val();
@@ -73,13 +92,12 @@
           const time = $("#time_form").val();
           const fill = $("#_number").val();
           $.ajax({
-            url: "/apply",
+            url: "/modify/<%= result._id %>",
             type: "POST",
             data: { dest, detail, date, time, fill },
           })
             .done(() => {
-              alert("success");
-              location.href = "/list";
+              location.href = "/detail/<%=result._id%>";
             })
             .fail((req, status, err) => {
               alert(JSON.parse(req.responseText).message);

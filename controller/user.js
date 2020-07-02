@@ -37,7 +37,6 @@ const showRegisterPage = (req, res, next) => {
 const register = async (req, res, next) => {
   const { id, pw } = req.body;
   const saltRounds = 10;
-  console.log(id, pw);
   const { name, grade, klass, number, serial } = await getProfile(
     await getToken(id, pw)
   );
@@ -76,10 +75,16 @@ const login = async (req, res, next) => {
       { id, name, grade, klass, number, serial },
       "53cr37K3Y",
       (err, result) => {
-        res.cookie("token", result, { httpOnly: true }).end();
+        res.cookie("token", result, { httpOnly: true });
+        res.locals.user = { name, grade, klass, number, serial };
+        res.end();
       }
     );
   });
 };
 
-module.exports = { register, login, showLoginPage, showRegisterPage };
+const logout = (req, res, next) => {
+  res.clearCookie("token").redirect("/");
+};
+
+module.exports = { register, login, showLoginPage, showRegisterPage, logout };

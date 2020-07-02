@@ -65,9 +65,22 @@
             />
           </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 10px;">
+          <div class="col" id="listed">
+            <label for="listed">인원</label>
+            <ul class="list-group">
+              <% for (let index = 0; index < result.join.length; index++) {%>
+              <li class="list-group-item">
+                <%= `${result.join[index].serial} ${result.join[index].name} `
+                %>
+              </li>
+              <% }; %>
+            </ul>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
           <div class="col">
-            <label for="_now">일시</label>
+            <label for="_place">일시</label>
             <% time = result.date.getFullYear() +"년 " + (result.date.getMonth()
             + 1 ) + "월 " + result.date.getDate() + "일 " +
             result.date.getHours() + "시" + result.date.getMinutes() + "분 " %>
@@ -81,10 +94,18 @@
           </div>
         </div>
         <div class="row text-align-center" style="margin-top: 10px;">
+          <% if(my === true){ %>
           <div class="col">
             <button id="deletebtn" type="button" class="btn btn-danger">
               삭제
             </button>
+          </div>
+          <div class="col">
+            <a href="/modify/<%=result._id%>" class="btn btn-primary">수정</a>
+          </div>
+          <% }; %>
+          <div class="col">
+            <a id="joinbtn" class="btn btn-secondary">가입</a>
           </div>
         </div>
       </form>
@@ -102,6 +123,24 @@
             })
             .fail((req, status, error) => {
               alert(JSON.parse(req.responseText).message);
+            });
+        });
+        $("#joinbtn").click((event) => {
+          $.ajax({
+            url: "/join/<%= result._id%>",
+            type: "PUT",
+            contentType: "application/json;",
+          })
+            .done(() => {
+              alert("참여 완료!");
+              location.href = "/list";
+            })
+            .fail((req, status, error) => {
+              if (req.status == 403) {
+                alert("이미 신청된 동행입니다.");
+              } else {
+                alert(JSON.parse(req.responseText).message);
+              }
             });
         });
       });
