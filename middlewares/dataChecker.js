@@ -3,16 +3,13 @@ const user = require("../controller/user");
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    res.locals.user = null;
-    if (!token) {
+    if (!res.locals.user) {
+      return res.redirect("/users/login");
+    } else {
       return next();
     }
-    req.jwt = jwt.verify(token, "53cr37K3Y");
-    res.locals.user = req.jwt;
-    next();
   } catch (error) {
     res.clearCookie("token");
-    return next();
+    return res.redirect("/users/login");
   }
 };
