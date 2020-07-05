@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const user = require("../controller/user");
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ module.exports = (req, res, next) => {
     if (!token) {
       return next();
     }
-    req.jwt = jwt.verify(token, "53cr37K3Y");
+    req.jwt = jwt.verify(token, process.env.JWT_KEY);
     res.locals.user = req.jwt;
     next();
   } catch (error) {

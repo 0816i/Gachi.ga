@@ -2,6 +2,7 @@ const User = require("../models/users");
 const request = require("request-promise");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const getToken = async (dimigoid, dimigopw) => {
   const token_options = {
@@ -73,7 +74,7 @@ const login = async (req, res, next) => {
     if (!same) return res.status(401).json({ message: "Incorrect" });
     jwt.sign(
       { id, name, grade, klass, number, serial },
-      "53cr37K3Y",
+      process.env.JWT_KEY,
       (err, result) => {
         res.cookie("token", result, { httpOnly: true });
         res.locals.user = { name, grade, klass, number, serial };
