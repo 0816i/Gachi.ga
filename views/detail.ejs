@@ -58,7 +58,7 @@
             <label for="_now">인원</label>
             <input
               type="text"
-              id="_place"
+              id="_fill"
               class="form-control"
               value="<%=result.now %>/<%=result.fill %>"
               readonly
@@ -132,15 +132,16 @@
         var socket = io();
         socket.on("<%=result._id%>", (msg) => {
           var result = "";
-          for (let index = 0; index < msg.length; index++) {
+          for (let index = 0; index < msg.join.length; index++) {
             result +=
               '<li class="list-group-item">' +
-              msg[index].serial +
+              msg.join[index].serial +
               " " +
-              msg[index].name +
+              msg.join[index].name +
               "</li>";
           }
           $(".list-group").html(result);
+          $("#_fill").attr("value", `${msg.now}/${msg.fill}`);
         });
         $("#deletebtn").click((event) => {
           $.ajax({

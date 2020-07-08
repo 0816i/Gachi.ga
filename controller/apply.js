@@ -105,7 +105,7 @@ const join = async (req, res, next) => {
       { $set: { join: find.join, now: find.now } },
       (err, result) => {
         if (err) return req.status(500).json({ message: "DBError" });
-        io.emit(_id, find.join);
+        io.emit(_id, find);
         return res.status(200).json({ message: "Success" });
       }
     );
