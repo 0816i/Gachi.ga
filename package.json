@@ -18,6 +18,7 @@
     "morgan": "~1.9.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
-    "require": "^2.4.20"
+    "require": "^2.4.20",
+    "socket.io": "^2.3.0"
   }
 }

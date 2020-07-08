@@ -1,34 +1,16 @@
 const createError = require("http-errors");
 const express = require("express");
-const mongoose = require("mongoose");
-const path = require("path");
-const dotenv = require("dotenv");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+const { createServer } = require("http");
+const { expressloader, mongoose, listenIO } = require("./loaders/index");
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const { dbOn } = require("./loaders/mongoose");
+
 const app = express();
 
-dotenv.config();
-mongoose.connect(process.env.DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  console.log("Connected Success");
-});
-
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+expressloader(app);
+const db = dbOn();
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -48,7 +30,8 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.json({ message: err.message });
-  console.log(err);
 });
 
-app.listen(3000, () => console.log("Server Started"));
+const server = createServer(app);
+server.listen(3000, () => console.log("Server Started"));
+listenIO(server);

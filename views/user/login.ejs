@@ -63,7 +63,11 @@
               location.href = "/list";
             })
             .fail((request, status, error) => {
-              alert(JSON.parse(request.responseText).message);
+              if (request.status == 404) {
+                alert("계정정보를 확인해 주세요!");
+              } else {
+                alert("잠시만 기다렸다가 다시 시도해주세요!");
+              }
             });
         });
       });

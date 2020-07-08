@@ -60,11 +60,15 @@
             data: { id, pw },
           })
             .done(() => {
-              alert("정상!");
+              alert("회원가입 완료!");
               location.href = "/users/login";
             })
             .fail((request, status, error) => {
-              alert(JSON.parse(request.responseText).message);
+              if (request.status == 406) {
+                alert("이미 존재하는 계정입니다.");
+              } else if (request.status == 500) {
+                alert("정보를 다시 확인해 주십시요.");
+              }
             });
         });
       });

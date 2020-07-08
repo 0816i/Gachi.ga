@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Detail</title>
+
     <%- include('./general/data') %>
   </head>
   <body>
@@ -96,22 +97,51 @@
         <div class="row text-align-center" style="margin-top: 10px;">
           <% if(my === true){ %>
           <div class="col">
-            <button id="deletebtn" type="button" class="btn btn-danger">
+            <button
+              id="deletebtn"
+              type="button"
+              class="btn btn-danger"
+              style="padding-left: 10%; padding-right: 10%;"
+            >
               삭제
             </button>
           </div>
           <div class="col">
-            <a href="/modify/<%=result._id%>" class="btn btn-primary">수정</a>
+            <a
+              href="/modify/<%=result._id%>"
+              class="btn btn-primary"
+              style="padding-left: 10%; padding-right: 10%;"
+              >수정</a
+            >
           </div>
           <% }; %>
           <div class="col">
-            <a id="joinbtn" class="btn btn-secondary">가입</a>
+            <a
+              id="joinbtn"
+              class="btn btn-secondary"
+              style="padding-left: 10%; padding-right: 10%;"
+              >가입</a
+            >
           </div>
         </div>
       </form>
+      <p id="test"></p>
     </div>
     <script>
       $(function () {
+        var socket = io();
+        socket.on("<%=result._id%>", (msg) => {
+          var result = "";
+          for (let index = 0; index < msg.length; index++) {
+            result +=
+              '<li class="list-group-item">' +
+              msg[index].serial +
+              " " +
+              msg[index].name +
+              "</li>";
+          }
+          $(".list-group").html(result);
+        });
         $("#deletebtn").click((event) => {
           $.ajax({
             url: "/delete/<%= result._id %>",
@@ -133,7 +163,6 @@
           })
             .done(() => {
               alert("참여 완료!");
-              location.href = "/list";
             })
             .fail((req, status, error) => {
               if (req.status == 403) {

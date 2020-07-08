@@ -1,6 +1,7 @@
 const Godata = require("../models/godata");
 const { response } = require("express");
 const { TooManyRequests } = require("http-errors");
+const { io } = require("../loaders/index");
 
 const showMainPage = (req, res, next) => {
   res.render("index", { title: "메인페이지" });
@@ -44,27 +45,6 @@ const makeapply = async (req, res, next) => {
   });
 
   res.status(200).json({ message: "Correct" });
-};
-
-const makejoin = async (req, res, next) => {
-  const id = req.params.id;
-
-  const myApply = await Godata.findById(id);
-
-  if (myApply.join.indexOf(req.jwt) != -1) {
-    return res.status(401).json({ message: "Already Exists" });
-  }
-
-  myApply.join.push(req.jwt);
-
-  Godata.findByIdAndUpdate(
-    id,
-    { $set: { join: myApply.join } },
-    (err, result) => {
-      if (err) return res.status(501).json({ message: "Error" });
-      res.status(200).json({ message: "correct" });
-    }
-  );
 };
 
 const applydelete = async (req, res, next) => {
@@ -116,7 +96,6 @@ const join = async (req, res, next) => {
       return res.status(403).json({ message: "already exists" });
     }
   }
-
   find.join.push({ name, id, grade, klass, serial, number });
   find.now += 1;
 
@@ -126,6 +105,7 @@ const join = async (req, res, next) => {
       { $set: { join: find.join, now: find.now } },
       (err, result) => {
         if (err) return req.status(500).json({ message: "DBError" });
+        io.emit(_id, find.join);
         return res.status(200).json({ message: "Success" });
       }
     );
@@ -157,7 +137,6 @@ module.exports = {
   list,
   detail,
   makeapply,
-  makejoin,
   showApplyPage,
   applydelete,
   showModifyPage,
