@@ -35,6 +35,8 @@ router.delete(
   wrap(control.applydelete)
 );
 
+router.delete("/join/:id", authChecker, dataChecker, wrap(control.joindelete));
+
 router.get("/mypage", authChecker, dataChecker, wrap(control.myGodata));
 
 module.exports = router;

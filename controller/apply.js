@@ -22,7 +22,17 @@ const detail = async (req, res, next) => {
   if (req.jwt.id === result.id) {
     my = true;
   }
-  res.status(200).render("detail", { result, my });
+
+  var isJoin = false;
+
+  for (let index = 0; index < result.join.length; index++) {
+    if (result.join[index].id === req.jwt.id) {
+      isJoin = true;
+      break;
+    }
+  }
+
+  res.status(200).render("detail", { result, my, isJoin });
 };
 
 const showApplyPage = async (req, res, next) => {
@@ -91,6 +101,7 @@ const join = async (req, res, next) => {
   const _id = req.params.id;
   const { name, id, grade, klass, serial, number } = req.jwt;
   const find = await Godata.findById(_id);
+
   for (let index = 0; index < find.join.length; index++) {
     if (find.join[index].id === req.jwt.id) {
       return res.status(403).json({ message: "already exists" });
@@ -112,6 +123,24 @@ const join = async (req, res, next) => {
   } else {
     res.status(403).json({ message: "too many students" });
   }
+};
+
+const joindelete = async (req, res, next) => {
+  const _id = req.params.id;
+  const { name, id, grade, klass, serial, number } = req.jwt;
+  const find = await Godata.findById(_id);
+  for (let index = 0; index < find.join.length; index++) {
+    if (find.join[index].id === id) {
+      find.join.splice(index, 1);
+      find.now -= 1;
+      const result = await Godata.findByIdAndUpdate(_id, {
+        $set: { join: find.join, now: find.now },
+      });
+      io.emit(_id, find);
+      return res.status(200).json({ message: "correct" });
+    }
+  }
+  return res.status(404).json({ message: "notfound!" });
 };
 
 const myGodata = async (req, res, next) => {
@@ -142,5 +171,6 @@ module.exports = {
   showModifyPage,
   modify,
   join,
+  joindelete,
   myGodata,
 };
