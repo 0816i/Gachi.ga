@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 //connect DB
-
 exports.dbOn = () => {
   mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,

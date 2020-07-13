@@ -1,10 +1,37 @@
 const Godata = require("../models/godata");
-const { response } = require("express");
-const { TooManyRequests } = require("http-errors");
-const { io } = require("../loaders/index");
+const { io, wss } = require("../loaders/index");
+
+const idCheck = (find, id) => {
+  for (let index = 0; index < find.join.length; index++) {
+    if (find.join[index].id === id) {
+      return { isHere: true, index };
+    }
+  }
+  return { isHere: false, index: -1 };
+};
+
+const options = (req, res) => {
+  res.header("Allow", "GET, PUT, POST, DELETE");
+  res.status(204).end();
+};
 
 const showMainPage = (req, res, next) => {
   res.render("index", { title: "메인페이지" });
+};
+
+const showModifyPage = async (req, res, next) => {
+  const id = req.params.id;
+  const result = await Godata.findById(id);
+
+  if (result.id != res.locals.user.id) {
+    return res.status(403).redirect(`/detail/${id}`);
+  }
+
+  res.status(200).render("modify", { result });
+};
+
+const showApplyPage = async (req, res, next) => {
+  res.render("apply", { title: "등록" });
 };
 
 const list = async (req, res, next) => {
@@ -14,19 +41,16 @@ const list = async (req, res, next) => {
 
 const detail = async (req, res, next) => {
   const id = req.params.id;
+  let my = false;
+  let isJoin = false;
   const result = await Godata.findById(id);
-  if (!req.jwt) {
-    return res.redirect("/users/login");
-  }
-  var my = false;
-  if (req.jwt.id === result.id) {
+
+  if (res.locals.user.id === result.id) {
     my = true;
   }
 
-  var isJoin = false;
-
   for (let index = 0; index < result.join.length; index++) {
-    if (result.join[index].id === req.jwt.id) {
+    if (result.join[index].id === res.locals.user.id) {
       isJoin = true;
       break;
     }
@@ -35,15 +59,11 @@ const detail = async (req, res, next) => {
   res.status(200).render("detail", { result, my, isJoin });
 };
 
-const showApplyPage = async (req, res, next) => {
-  res.render("apply", { title: "등록" });
-};
-
 const makeapply = async (req, res, next) => {
-  const { name, id, grade, klass, serial, number } = req.jwt;
+  const { name, id, serial } = res.locals.user;
   const { dest, detail, date, time, fill } = req.body;
 
-  const create = Godata.create({
+  const apply = new Godata({
     name,
     id,
     serial,
@@ -51,102 +71,120 @@ const makeapply = async (req, res, next) => {
     dest,
     fill,
     date: new Date(date + " " + time),
-    join: [{ name, id, grade, klass, serial, number }],
+    join: [{ id, name, serial }],
   });
+
+  await apply.save();
 
   res.status(200).json({ message: "Correct" });
 };
 
 const applydelete = async (req, res, next) => {
   const id = req.params.id;
-
-  const tmpresult = await Godata.findById(id);
-  if (tmpresult.id != req.jwt.id) {
-    return res.status(403).json({ message: "forbiden" });
-  }
-  Godata.findByIdAndDelete(id, (err, result) => {
-    if (err) next(err);
-    return res.status(201).json({ message: "Success" });
-  });
-};
-
-const showModifyPage = async (req, res, next) => {
-  const id = req.params.id;
-  const tmpresult = await Godata.findById(id);
-
-  if (tmpresult.id != req.jwt.id) {
-    return res.status(403).redirect(`/detail/${id}`);
-  }
-
   const result = await Godata.findById(id);
 
-  res.status(200).render("modify", { result });
+  if (result.id != res.locals.user.id) {
+    return res.status(403).json({ message: "내가 만든 모임이 아닙니다!" });
+  }
+
+  Godata.findByIdAndDelete(id, (err, result) => {
+    if (err) next(err);
+    return res.status(201).json({ message: "삭제되었습니다!" });
+  });
 };
 
 const modify = async (req, res, next) => {
   const id = req.params.id;
-
   const { dest, detail, date, time, fill } = req.body;
 
-  const tmpresult = await Godata.findByIdAndUpdate(id, {
+  await Godata.findByIdAndUpdate(id, {
     detail,
     dest,
     fill,
     date: new Date(date + " " + time),
   });
-  res.status(200).json({ message: "success" });
+
+  res.status(200).json({ message: "수정되었습니다!" });
 };
 
 const join = async (req, res, next) => {
   const _id = req.params.id;
-  const { name, id, grade, klass, serial, number } = req.jwt;
-  const find = await Godata.findById(_id);
+  const { name, id, serial } = res.locals.user;
 
-  for (let index = 0; index < find.join.length; index++) {
-    if (find.join[index].id === req.jwt.id) {
-      return res.status(403).json({ message: "already exists" });
+  Godata.findOne({ _id, join: { $elemMatch: { id } } }, async (err, result) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ message: "잠시 후 다시 시도해주세요!" })
+        .end();
+    if (result)
+      return res.status(403).json({ message: "이미 신청한 동행입니다!" }).end();
+    const { now, fill } = await Godata.findById(_id);
+    if (now + 1 > fill) {
+      return res.status(403).json({ message: "한계 인원을 넘었습니다!" }).end();
     }
-  }
-  find.join.push({ name, id, grade, klass, serial, number });
-  find.now += 1;
-
-  if (find.now <= find.fill) {
     Godata.findByIdAndUpdate(
       _id,
-      { $set: { join: find.join, now: find.now } },
+      { $inc: { now: 1 }, $push: { join: { name, id, serial } } },
+      { new: true, upsert: true },
       (err, result) => {
-        if (err) return req.status(500).json({ message: "DBError" });
-        io.emit(_id, find);
-        return res.status(200).json({ message: "Success" });
+        if (err)
+          return req
+            .status(500)
+            .json({ message: "잠시 후 다시 시도해주세요!" });
+        io.emit(_id, result);
+        return res.status(200).json({ message: "신청이 완료되었습니다!" });
       }
     );
-  } else {
-    res.status(403).json({ message: "too many students" });
-  }
+  });
 };
 
 const joindelete = async (req, res, next) => {
   const _id = req.params.id;
-  const { name, id, grade, klass, serial, number } = req.jwt;
-  const find = await Godata.findById(_id);
-  for (let index = 0; index < find.join.length; index++) {
-    if (find.join[index].id === id) {
-      find.join.splice(index, 1);
-      find.now -= 1;
-      const result = await Godata.findByIdAndUpdate(_id, {
-        $set: { join: find.join, now: find.now },
-      });
-      io.emit(_id, find);
-      return res.status(200).json({ message: "correct" });
-    }
-  }
-  return res.status(404).json({ message: "notfound!" });
+  const { id } = res.locals.user;
+
+  Godata.findOne({ _id, join: { $elemMatch: { id } } }, async (err, result) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ message: "잠시 후 다시 시도해주세요!" })
+        .end();
+    if (!result)
+      return res
+        .status(404)
+        .json({ message: "해당하는 모임을 찾을 수 없습니다!" })
+        .end();
+    Godata.findByIdAndUpdate(
+      _id,
+      {
+        $inc: { now: -1 },
+        $pull: { join: { id } },
+      },
+      { new: true },
+      (err, result) => {
+        if (err)
+          return res
+            .status(500)
+            .json({ message: "잠시 후 다시 시도해주세요!" })
+            .end();
+        if (!result)
+          return res
+            .status(404)
+            .json({ message: "해당하는 모임을 찾을 수 없습니다!" })
+            .end();
+        io.emit(_id, result);
+        return res.status(200).json({ message: "처리되었습니다!" });
+      }
+    );
+  });
 };
 
 const myGodata = async (req, res, next) => {
+  /*
   const myData = await Godata.find();
-  const { id } = req.jwt;
+  const { id } = res.locals.user;
   const finaldata = { myApply: [], myJoin: [] };
+
   for (let index = 0; index < myData.length; index++) {
     if (myData[index].id === id) {
       finaldata.myApply.push(myData[index]);
@@ -158,10 +196,13 @@ const myGodata = async (req, res, next) => {
       }
     }
   }
+
   res.status(200).json(finaldata);
+  */
 };
 
 module.exports = {
+  options,
   showMainPage,
   list,
   detail,

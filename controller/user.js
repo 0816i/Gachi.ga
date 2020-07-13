@@ -15,6 +15,7 @@ const getToken = async (dimigoid, dimigopw) => {
     json: true,
   };
   const getToken = (await request.post(token_options)).token;
+
   return getToken;
 };
 
@@ -28,11 +29,16 @@ const getProfile = async (dimigoin_token) => {
     json: true,
   };
   const user_profile = await request.get(jwt_options);
+
   return user_profile;
 };
 
 const showRegisterPage = (req, res, next) => {
   res.render("user/register");
+};
+
+const showLoginPage = (req, res, next) => {
+  res.render("user/login");
 };
 
 const register = async (req, res, next) => {
@@ -41,8 +47,8 @@ const register = async (req, res, next) => {
   const { name, grade, klass, number, serial } = await getProfile(
     await getToken(id, pw)
   );
-
   const alreadyCheck = await User.findOne({ id });
+
   if (alreadyCheck) return res.status(406).json({ message: "Already Exists" });
 
   bcrypt.hash(pw, saltRounds, async (err, hash) => {
@@ -55,12 +61,9 @@ const register = async (req, res, next) => {
       number,
       serial,
     });
+
     res.status(201).json(userCreate);
   });
-};
-
-const showLoginPage = (req, res, next) => {
-  res.render("user/login");
 };
 
 const login = async (req, res, next) => {

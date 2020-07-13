@@ -165,6 +165,7 @@
             })
             .fail((req, status, error) => {
               alert(JSON.parse(req.responseText).message);
+              location.href = location.href;
             });
         });
         $("#joinbtn").click((event) => {
@@ -178,11 +179,8 @@
               location.href = location.href;
             })
             .fail((req, status, error) => {
-              if (req.status == 403) {
-                alert("이미 신청된 동행입니다.");
-              } else {
-                alert(JSON.parse(req.responseText).message);
-              }
+              alert(JSON.parse(req.responseText).message);
+              location.href = location.href;
             });
         });
         $("#deletejoin").click((event) => {
@@ -196,7 +194,8 @@
               location.href = location.href;
             })
             .fail((req, status, error) => {
-              alert("문제가 발생했습니다.");
+              alert(JSON.parse(req.responseText).message);
+              location.href = location.href;
             });
         });
       });

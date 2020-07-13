@@ -3,6 +3,29 @@
   <head>
     <title>수정</title>
     <%- include('./general/data') %>
+    <script>
+      $(function () {
+        $("#create_apply").submit((event) => {
+          event.preventDefault();
+          const dest = $("#_place").val();
+          const detail = $("#_detail").val();
+          const date = $("#date_form").val();
+          const time = $("#time_form").val();
+          const fill = $("#_number").val();
+          $.ajax({
+            url: "/modify/<%= result._id %>",
+            type: "POST",
+            data: { dest, detail, date, time, fill },
+          })
+            .done(() => {
+              location.href = "/detail/<%=result._id%>";
+            })
+            .fail((req, status, err) => {
+              alert(JSON.parse(req.responseText).message);
+            });
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -82,28 +105,5 @@
         </button>
       </form>
     </div>
-    <script>
-      $(function () {
-        $("#create_apply").submit((event) => {
-          event.preventDefault();
-          const dest = $("#_place").val();
-          const detail = $("#_detail").val();
-          const date = $("#date_form").val();
-          const time = $("#time_form").val();
-          const fill = $("#_number").val();
-          $.ajax({
-            url: "/modify/<%= result._id %>",
-            type: "POST",
-            data: { dest, detail, date, time, fill },
-          })
-            .done(() => {
-              location.href = "/detail/<%=result._id%>";
-            })
-            .fail((req, status, err) => {
-              alert(JSON.parse(req.responseText).message);
-            });
-        });
-      });
-    </script>
   </body>
 </html>

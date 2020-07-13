@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const { model } = require("./godata");
+const { Schema, model } = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   id: { type: String, required: true },
   pw: { type: String, required: true, trim: true },
   name: { type: String, required: true, trim: true },
@@ -11,4 +10,4 @@ const userSchema = new mongoose.Schema({
   serial: { type: Number, required: true, trim: true },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = model("User", userSchema);
