@@ -24,7 +24,7 @@ app.use(function (err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   res.status(err.status || 500);
-  res.json({ message: err.message });
+  res.json({ message: "알 수 없는 에러가 발생했습니다!" });
   console.log(err);
 });
 

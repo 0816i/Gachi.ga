@@ -15,11 +15,7 @@ const GodataSchema = new Schema({
   date: { type: Date, required: true },
   join: { type: [UserSchema], required: true },
   fill: { type: Number, required: true },
-  now: {
-    type: Number,
-    default: 1,
-    max: this.fill,
-  },
+  now: { type: Number, default: 1 },
 });
 
 module.exports = model("Godata", GodataSchema);

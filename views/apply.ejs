@@ -19,7 +19,7 @@
         <div class="row">
           <div class="col">
             <label for="_place">목적지</label>
-            <input type="text" id="_place" class="form-control" />
+            <input type="text" id="_place" class="form-control" required />
           </div>
         </div>
         <div class="row" style="margin-top: 15px;">
@@ -30,6 +30,7 @@
                 class="form-control rounded-0"
                 id="_detail"
                 rows="10"
+                required
               ></textarea>
             </div>
           </div>
@@ -51,11 +52,11 @@
         <div class="row">
           <div class="col">
             <label for="date_form">날짜</label>
-            <input type="date" id="date_form" class="form-control" />
+            <input type="date" id="date_form" class="form-control" required />
           </div>
           <div class="col">
             <label for="time_form">시간</label>
-            <input type="time" id="time_form" class="form-control" />
+            <input type="time" id="time_form" class="form-control" required />
           </div>
         </div>
         <button class="btn btn-info btn-block my-4" type="submit">

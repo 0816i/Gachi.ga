@@ -1,14 +1,5 @@
 const Godata = require("../models/godata");
-const { io, wss } = require("../loaders/index");
-
-const idCheck = (find, id) => {
-  for (let index = 0; index < find.join.length; index++) {
-    if (find.join[index].id === id) {
-      return { isHere: true, index };
-    }
-  }
-  return { isHere: false, index: -1 };
-};
+const { io } = require("../loaders/index");
 
 const options = (req, res) => {
   res.header("Allow", "GET, PUT, POST, DELETE");
@@ -49,14 +40,16 @@ const detail = async (req, res, next) => {
     my = true;
   }
 
-  for (let index = 0; index < result.join.length; index++) {
-    if (result.join[index].id === res.locals.user.id) {
-      isJoin = true;
-      break;
+  if (!my) {
+    for (let index = 0; index < result.join.length; index++) {
+      if (result.join[index].id === res.locals.user.id) {
+        isJoin = true;
+        break;
+      }
     }
   }
 
-  res.status(200).render("detail", { result, my, isJoin });
+  return res.status(200).render("detail", { result, my, isJoin });
 };
 
 const makeapply = async (req, res, next) => {
@@ -76,7 +69,7 @@ const makeapply = async (req, res, next) => {
 
   await apply.save();
 
-  res.status(200).json({ message: "Correct" });
+  return res.status(200).json({ message: "Correct" });
 };
 
 const applydelete = async (req, res, next) => {
@@ -96,6 +89,11 @@ const applydelete = async (req, res, next) => {
 const modify = async (req, res, next) => {
   const id = req.params.id;
   const { dest, detail, date, time, fill } = req.body;
+  const { now } = await Godata.findById(id);
+
+  if (fill < now) {
+    return res.status(403).json({ message: "인원이 너무 적습니다." });
+  }
 
   await Godata.findByIdAndUpdate(id, {
     detail,
@@ -104,7 +102,7 @@ const modify = async (req, res, next) => {
     date: new Date(date + " " + time),
   });
 
-  res.status(200).json({ message: "수정되었습니다!" });
+  return res.status(200).json({ message: "수정되었습니다!" });
 };
 
 const join = async (req, res, next) => {

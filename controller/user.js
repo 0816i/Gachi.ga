@@ -49,7 +49,8 @@ const register = async (req, res, next) => {
   );
   const alreadyCheck = await User.findOne({ id });
 
-  if (alreadyCheck) return res.status(406).json({ message: "Already Exists" });
+  if (alreadyCheck)
+    return res.status(406).json({ message: "이미 존재하는 사용자입니다." });
 
   bcrypt.hash(pw, saltRounds, async (err, hash) => {
     const userCreate = await User.create({
@@ -70,11 +71,13 @@ const login = async (req, res, next) => {
   const { id, pw } = req.body;
 
   const userAccount = await User.findOne({ id });
-  if (!userAccount) return res.status(404).json({ message: "Incorrect" });
+  if (!userAccount)
+    return res.status(404).json({ message: "존재 하지 않는 사용자입니다." });
   const { name, grade, klass, number, serial } = userAccount;
 
   bcrypt.compare(pw, userAccount.pw, (err, same) => {
-    if (!same) return res.status(401).json({ message: "Incorrect" });
+    if (!same)
+      return res.status(401).json({ message: "저장된 정보가 다릅니다." });
     jwt.sign(
       { id, name, grade, klass, number, serial },
       process.env.JWT_KEY,

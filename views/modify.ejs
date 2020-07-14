@@ -47,6 +47,7 @@
               id="_place"
               class="form-control"
               value="<%= result.dest%>"
+              required
             />
           </div>
         </div>
@@ -54,7 +55,12 @@
           <div class="col">
             <div class="form-group">
               <label for="exampleFormControlTextarea2">상세 정보</label>
-              <textarea class="form-control rounded-0" id="_detail" rows="10">
+              <textarea
+                class="form-control rounded-0"
+                id="_detail"
+                rows="10"
+                required
+              >
 <%= result.detail %></textarea
               >
             </div>
@@ -88,6 +94,7 @@
               id="date_form"
               class="form-control"
               value="<%=`${result.date.getFullYear()}-${month}-${day}`%>"
+              required
             />
           </div>
           <div class="col">
@@ -96,6 +103,7 @@
               type="time"
               id="time_form"
               class="form-control"
+              required
               value="<%=`${result.date.getHours()}:${result.date.getMinutes()}`%>"
             />
           </div>
