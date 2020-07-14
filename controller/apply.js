@@ -17,6 +17,7 @@ const showModifyPage = async (req, res, next) => {
   if (result.id != res.locals.user.id) {
     return res.status(403).redirect(`/detail/${id}`);
   }
+  console.log(result.date.getHours());
 
   res.status(200).render("modify", { result });
 };

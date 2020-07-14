@@ -99,12 +99,14 @@
           </div>
           <div class="col">
             <label for="time_form">시간</label>
+            <% if(result.date.getMinutes()<10) var minutes =
+            '0'+result.date.getMinutes() %>
             <input
               type="time"
               id="time_form"
               class="form-control"
               required
-              value="<%=`${result.date.getHours()}:${result.date.getMinutes()}`%>"
+              value="<%=`${result.date.getHours()}:${minutes}`%>"
             />
           </div>
         </div>
