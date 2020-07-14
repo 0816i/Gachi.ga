@@ -51,11 +51,13 @@
                 <th><%= data.now+'/'+data.fill%></th>
                 <th><%= data.name %></th>
                 <th><%= data.serial %></th>
-                <% time = data.date.getFullYear() +"년 " + (data.date.getMonth()
-                + 1 ) + "월 " + data.date.getDate() + "일 " +
-                data.date.getHours() + "시 " + data.date.getMinutes() + "분 " %>
                 <th>
-                  <%= time %>
+                  <%=`${data.date.getFullYear()}년
+                  ${(data.date.getMonth()+1<10?'0':'') +
+                  (data.date.getMonth()+1)}월 ${(data.date.getDate()<10?'0':'')
+                  + data.date.getDate()}일 ${(data.date.getHours()<10?'0':'') +
+                  data.date.getHours()}시 ${(data.date.getMinutes()<10?'0':'') +
+                  data.date.getMinutes()}분 `%>
                 </th>
               </tr>
               <% }); %>

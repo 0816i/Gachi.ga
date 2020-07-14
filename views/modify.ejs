@@ -84,29 +84,22 @@
         <div class="row">
           <div class="col">
             <label for="date_form">날짜</label>
-            <% var month = '0'; var day = '0'; if (result.date.getMonth()+1 <
-            10){ month = '0'+ (result.date.getMonth()+1) } else{ month =
-            (result.date.getMonth()+1) } if (result.date.getDate() < 10){ day =
-            '0'+ result.date.getDate(); } else{ day = result.date.getDate(); }
-            %>
             <input
               type="date"
               id="date_form"
               class="form-control"
-              value="<%=`${result.date.getFullYear()}-${month}-${day}`%>"
+              value="<%=`${result.date.getFullYear()}-${(result.date.getMonth()+1<10?'0':'') + (result.date.getMinutes()+1)}-${(result.date.getDate()<10?'0':'') + result.date.getDate()}`%>"
               required
             />
           </div>
           <div class="col">
             <label for="time_form">시간</label>
-            <% if(result.date.getMinutes()<10) var minutes =
-            '0'+result.date.getMinutes() %>
             <input
               type="time"
               id="time_form"
               class="form-control"
               required
-              value="<%=`${result.date.getHours()}:${minutes}`%>"
+              value="<%=`${(result.date.getHours()<10?'0':'') + result.date.getHours()}:${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}`%>"
             />
           </div>
         </div>

@@ -89,7 +89,7 @@
               type="text"
               id="_place"
               class="form-control"
-              value="<%=time %>"
+              value="<%=`${result.date.getFullYear()}년 ${(result.date.getMonth()+1<10?'0':'') + (result.date.getMonth()+1)}월 ${(result.date.getDate()<10?'0':'') + result.date.getDate()}일 ${(result.date.getHours()<10?'0':'') + result.date.getHours()}시 ${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}분 `%>"
               readonly
             />
           </div>
