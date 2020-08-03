@@ -2,20 +2,45 @@
 <html>
   <head>
     <title>로그인</title>
+
+    <style>
+      * {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      p {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      input {
+        background-color: white;
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      button {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .dimigo-button {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        padding: 10px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        margin-left: auto;
+        margin-right: auto;
+        width: 240px;
+      }
+    </style>
   </head>
 
   <body>
     <%- include('../general/data') %>
     <!--Main Navigation-->
-    <header>
-      <%- include('../general/nav') %>
-    </header>
-    <div class="container">
-      <form
-        id="login"
-        class="text-center border border-light p-5"
-        style="margin-top: 20px;"
-      >
+    <div
+      class="d-flex justify-content-center flex-column"
+      style="height: 100vh;"
+    >
+      <form id="login" class="text-center p-5">
         <p class="h4 mb-4">Sign in</p>
 
         <!-- Email -->
@@ -37,15 +62,9 @@
         />
 
         <!-- Sign in button -->
-        <button class="btn btn-info btn-block my-4" type="submit">
-          Sign in
+        <button class="dimigo-button animated fadeInUp" type="submit">
+          로그인
         </button>
-
-        <!-- Register -->
-        <p>
-          Not a member?
-          <a href="/users/register">Register</a>
-        </p>
       </form>
     </div>
     <script>

@@ -6,7 +6,7 @@ const control = require("../controller/apply");
 router.options("/*", wrap(control.options));
 
 router.get("/", authChecker, wrap(control.showMainPage));
-router.get("/list", authChecker, wrap(control.list));
+router.get("/list", authChecker, dataChecker, wrap(control.list));
 router.get("/detail/:id", authChecker, dataChecker, wrap(control.detail));
 router.get(
   "/modify/:id",
@@ -15,6 +15,7 @@ router.get(
   wrap(control.showModifyPage)
 );
 router.get("/apply", authChecker, dataChecker, wrap(control.showApplyPage));
+router.get("/mypage", authChecker, dataChecker, wrap(control.myGodata));
 
 router.put("/join/:id", authChecker, dataChecker, wrap(control.join));
 

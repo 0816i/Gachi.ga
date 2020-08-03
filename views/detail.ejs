@@ -2,156 +2,179 @@
 <html>
   <head>
     <title>Detail</title>
-
     <%- include('./general/data') %>
+    <style>
+      #_place,
+      #_id,
+      #_detail,
+      #_fill {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        padding: 10px;
+        padding-left: 20px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <!--Main Navigation-->
     <header>
       <%- include('./general/nav') %>
     </header>
-    <div class="container">
-      <form
-        id="create_apply"
-        class="border border-light p-5"
-        style="margin-top: 10px;"
-      >
-        <div class="row">
-          <div class="col">
-            <label for="_id">글쓴이</label>
-            <input
-              type="text"
-              id="_id"
-              class="form-control"
-              value="<%=`${result.serial} ${result.name}`%>"
-              readonly
-            />
-          </div>
-          <div class="col">
-            <label for="_place">목적지</label>
-            <input
-              type="text"
-              id="_place"
-              class="form-control"
-              value="<%=result.dest %>"
-              readonly
-            />
-          </div>
+    <form id="create_apply" class="border border-light p-5">
+      <div class="row">
+        <div class="col">
+          <label for="_id">글쓴이</label>
+          <input
+            type="text"
+            id="_id"
+            class="form-control"
+            value="<%=`${result.serial} ${result.name}`%>"
+            readonly
+          />
         </div>
-        <div class="row" style="margin-top: 15px;">
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleFormControlTextarea2">상세 정보</label>
-              <textarea
-                class="form-control rounded-0"
-                id="_detail"
-                rows="10"
-                readonly
-              >
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="_place">목적지</label>
+          <input
+            type="text"
+            id="_place"
+            class="form-control"
+            value="<%=result.dest %>"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="row" style="margin-top: 15px;">
+        <div class="col">
+          <div class="form-group">
+            <label for="exampleFormControlTextarea2">상세 정보</label>
+            <textarea
+              class="form-control rounded-0"
+              id="_detail"
+              rows="10"
+              readonly
+            >
 <%= result.detail %></textarea
-              >
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label for="_now">인원</label>
-            <input
-              type="text"
-              id="_fill"
-              class="form-control"
-              value="<%=result.now %>/<%=result.fill %>"
-              readonly
-              style="margin-bottom: 10px;"
-            />
-          </div>
-        </div>
-        <div class="row" style="margin-top: 10px;">
-          <div class="col" id="listed">
-            <label for="listed">인원</label>
-            <ul class="list-group">
-              <% for (let index = 0; index < result.join.length; index++) {%>
-              <li class="list-group-item">
-                <%= `${result.join[index].serial} ${result.join[index].name} `
-                %>
-              </li>
-              <% }; %>
-            </ul>
-          </div>
-        </div>
-        <div class="row" style="margin-top: 10px;">
-          <div class="col">
-            <label for="_place">일시</label>
-            <% time = result.date.getFullYear() +"년 " + (result.date.getMonth()
-            + 1 ) + "월 " + result.date.getDate() + "일 " +
-            result.date.getHours() + "시" + result.date.getMinutes() + "분 " %>
-            <input
-              type="text"
-              id="_place"
-              class="form-control"
-              value="<%=`${result.date.getFullYear()}년 ${(result.date.getMonth()+1<10?'0':'') + (result.date.getMonth()+1)}월 ${(result.date.getDate()<10?'0':'') + result.date.getDate()}일 ${(result.date.getHours()<10?'0':'') + result.date.getHours()}시 ${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}분 `%>"
-              readonly
-            />
-          </div>
-        </div>
-        <div class="row text-align-center" style="margin-top: 10px;">
-          <% if(my === true){ %>
-          <div class="col">
-            <button
-              id="deletebtn"
-              type="button"
-              class="btn btn-danger"
-              style="padding-left: 10%; padding-right: 10%;"
-            >
-              삭제
-            </button>
-          </div>
-          <div class="col">
-            <a
-              href="/modify/<%=result._id%>"
-              class="btn btn-primary"
-              style="padding-left: 10%; padding-right: 10%;"
-              >수정</a
             >
           </div>
-          <% } else{ if(!isJoin) {%>
-          <div class="col">
-            <a
-              id="joinbtn"
-              class="btn btn-secondary"
-              style="padding-left: 10%; padding-right: 10%;"
-              >가입</a
-            >
-          </div>
-          <% } else{ %>
-          <div class="col">
-            <button
-              id="deletejoin"
-              type="button"
-              class="btn btn-danger"
-              style="padding-left: 10%; padding-right: 10%;"
-            >
-              삭제
-            </button>
-          </div>
-          <%} }%>
         </div>
-      </form>
-    </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="_now">인원</label>
+          <input
+            type="text"
+            id="_fill"
+            class="form-control"
+            value="<%=result.now %>/<%=result.fill %>"
+            readonly
+            style="margin-bottom: 10px;"
+          />
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <div class="col" id="listed">
+          <label for="listed">인원 목록</label>
+          <ul class="list-group">
+            <% for (let index = 0; index < result.join.length; index++) {%>
+            <li
+              id="<%=result.join[index].id%>"
+              class="list-group-item list-group-item-config"
+            >
+              <%= `${result.join[index].serial} ${result.join[index].name} ` %>
+            </li>
+            <% }; %>
+          </ul>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <div class="col">
+          <label for="_place">일시</label>
+          <% time = result.date.getFullYear() +"년 " + (result.date.getMonth() +
+          1 ) + "월 " + result.date.getDate() + "일 " + result.date.getHours() +
+          "시" + result.date.getMinutes() + "분 " %>
+          <input
+            type="text"
+            id="_place"
+            class="form-control"
+            value="<%=`${result.date.getFullYear()}년 ${(result.date.getMonth()+1<10?'0':'') + (result.date.getMonth()+1)}월 ${(result.date.getDate()<10?'0':'') + result.date.getDate()}일 ${(result.date.getHours()<10?'0':'') + result.date.getHours()}시 ${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}분 `%>"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="row text-align-center" style="margin-top: 10px;">
+        <% if(my === true){ %>
+        <div class="col">
+          <button
+            id="deletebtn"
+            type="button"
+            class="btn btn-danger"
+            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+          >
+            삭제
+          </button>
+        </div>
+        <div class="col">
+          <a
+            href="/modify/<%=result._id%>"
+            class="btn btn-primary"
+            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+            >수정</a
+          >
+        </div>
+        <% } else{ if(!isJoin) {%>
+        <div class="col">
+          <a
+            id="joinbtn"
+            class="btn btn-secondary"
+            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+            >가입</a
+          >
+        </div>
+        <% } else{ %>
+        <div class="col">
+          <button
+            id="deletejoin"
+            type="button"
+            class="btn btn-danger"
+            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+          >
+            삭제
+          </button>
+        </div>
+        <%} }%>
+      </div>
+    </form>
     <script>
       $(function () {
         var socket = io();
         socket.on("<%=result._id%>", (msg) => {
-          var result = "";
-          for (let index = 0; index < msg.join.length; index++) {
-            result +=
-              '<li class="list-group-item">' +
-              msg.join[index].serial +
-              " " +
-              msg.join[index].name +
+          if (msg.message === "make") {
+            var result = "";
+            result =
+              `<li id=${msg.id} class="list-group-item animated flipInX">` +
+              msg.text +
               "</li>";
+
+            $(".list-group").append(result);
+          } else {
+            $(`#${msg.id}`).attr(
+              "class",
+              "animated fadeOut list-group-item list-group-item-config"
+            );
+            setTimeout(() => {
+              $(`#${msg.id}`).remove();
+            }, 1000);
           }
-          $(".list-group").html(result);
           $("#_fill").attr("value", `${msg.now}/${msg.fill}`);
         });
         $("#deletebtn").click((event) => {

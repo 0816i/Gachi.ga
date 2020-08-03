@@ -4,42 +4,59 @@
     <title><%= title %></title>
     <%- include('./general/data') %>
     <style>
-      .view {
-        background-image: url("https://upload.wikimedia.org/wikipedia/ko/d/dc/Dimigo-Main.png");
-        background-size: cover;
-        background-position: 50%;
-        margin-top: -56px;
+      * {
+        font-family: "Noto Sans KR", sans-serif;
+        outline: 0;
       }
-      .navbar {
-        z-index: 3;
+      .dimigo-button {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        padding: 10px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        margin-top: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 240px;
       }
-      html,
-      body,
-      header,
-      .view {
-        height: 100%;
+      .flex-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .login-box {
+        margin: auto;
+        margin-left: 30px;
+        margin-right: 30px;
+        height: 100vh;
+      }
+      h1 {
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 300;
+        margin: 0;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+      h6 {
+        text-align: center;
+        font-family: "Noto Sans KR", sans-serif;
+        margin: 0;
       }
     </style>
   </head>
   <body>
-    <!--Main Navigation-->
-    <header>
-      <%- include('./general/nav') %>
-
-      <div class="view intro-2 animated bounceIn">
-        <div class="full-bg-img">
-          <div class="mask rgba-black-strong flex-center">
-            <div class="container">
-              <div class="white-text text-center wow fadeInUp">
-                <h2>교통비를 더 저렴하게!</h2>
-                <h5>같은 목적지를 가는 친구와 택시비를 n빵해 보세요!</h5>
-                <br />
-                <p>여러분들의 저렴하고 안전한 귀가를 액션빔!</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div class="flex-container login-box">
+      <h1 class="animated fadeInLeft">Gachi.ga</h1>
+      <h6 class="animated fadeIn">집을 향한 당신의 새로운 파트너</h6>
+      <button
+        class="dimigo-button animated fadeInUp"
+        onclick="location.href='/list'"
+      >
+        디미고 계정으로 시작하기
+      </button>
+    </div>
   </body>
 </html>

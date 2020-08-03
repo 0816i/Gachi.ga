@@ -14,9 +14,14 @@ const getToken = async (dimigoid, dimigopw) => {
     },
     json: true,
   };
-  const getToken = (await request.post(token_options)).token;
-
-  return getToken;
+  try {
+    const getToken = (await request.post(token_options)).token;
+    return getToken;
+  } catch (err) {
+    if (err.statusCode === 404) {
+      return false;
+    }
+  }
 };
 
 const getProfile = async (dimigoin_token) => {
@@ -41,18 +46,17 @@ const showLoginPage = (req, res, next) => {
   res.render("user/login");
 };
 
-const register = async (req, res, next) => {
+const login = async (req, res, next) => {
   const { id, pw } = req.body;
-  const saltRounds = 10;
-  const { name, grade, klass, number, serial } = await getProfile(
-    await getToken(id, pw)
-  );
-  const alreadyCheck = await User.findOne({ id });
-
-  if (alreadyCheck)
-    return res.status(406).json({ message: "이미 존재하는 사용자입니다." });
-
-  bcrypt.hash(pw, saltRounds, async (err, hash) => {
+  let userAccount = await User.findOne({ id });
+  if (!userAccount) {
+    const token = await getToken(id, pw);
+    if (token === false) {
+      return res.status(404).end();
+    }
+    const { name, grade, klass, number, serial } = await getProfile(token);
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(pw, saltRounds);
     const userCreate = await User.create({
       id,
       pw: hash,
@@ -62,17 +66,8 @@ const register = async (req, res, next) => {
       number,
       serial,
     });
-
-    res.status(201).json(userCreate);
-  });
-};
-
-const login = async (req, res, next) => {
-  const { id, pw } = req.body;
-
-  const userAccount = await User.findOne({ id });
-  if (!userAccount)
-    return res.status(404).json({ message: "존재 하지 않는 사용자입니다." });
+    userAccount = userCreate;
+  }
   const { name, grade, klass, number, serial } = userAccount;
 
   bcrypt.compare(pw, userAccount.pw, (err, same) => {
@@ -82,16 +77,16 @@ const login = async (req, res, next) => {
       { id, name, grade, klass, number, serial },
       process.env.JWT_KEY,
       (err, result) => {
-        res.cookie("token", result, { httpOnly: true });
-        res.locals.user = { name, grade, klass, number, serial };
-        res.end();
+        res.cookie("token", result);
+        res.status(200).send("done");
       }
     );
   });
 };
 
 const logout = (req, res, next) => {
-  res.clearCookie("token").redirect("/");
+  res.clearCookie("token");
+  res.redirect("/");
 };
 
-module.exports = { register, login, showLoginPage, showRegisterPage, logout };
+module.exports = { login, showLoginPage, logout };

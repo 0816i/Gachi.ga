@@ -26,7 +26,9 @@ const showApplyPage = async (req, res, next) => {
 };
 
 const list = async (req, res, next) => {
-  const result = await Godata.find().sort("-_id");
+  const result = await Godata.find({ date: { $gte: Date.now() } }).sort({
+    _id: -1,
+  });
   res.render("list", { result });
 };
 
@@ -130,7 +132,13 @@ const join = async (req, res, next) => {
           return req
             .status(500)
             .json({ message: "잠시 후 다시 시도해주세요!" });
-        io.emit(_id, result);
+        io.emit(_id, {
+          id,
+          now: result.now,
+          fill: result.fill,
+          text: `${serial} ${name}`,
+          message: "make",
+        });
         return res.status(200).json({ message: "신청이 완료되었습니다!" });
       }
     );
@@ -170,7 +178,12 @@ const joindelete = async (req, res, next) => {
             .status(404)
             .json({ message: "해당하는 모임을 찾을 수 없습니다!" })
             .end();
-        io.emit(_id, result);
+        io.emit(_id, {
+          id,
+          now: result.now,
+          fill: result.fill,
+          message: "delete",
+        });
         return res.status(200).json({ message: "처리되었습니다!" });
       }
     );
@@ -178,25 +191,23 @@ const joindelete = async (req, res, next) => {
 };
 
 const myGodata = async (req, res, next) => {
-  /*
-  const myData = await Godata.find();
   const { id } = res.locals.user;
+  const myData = await Godata.find({ id }).sort({ _id: -1 });
+  const myjoinData = await Godata.find({
+    join: { $elemMatch: { id } },
+  }).sort({ _id: -1 });
   const finaldata = { myApply: [], myJoin: [] };
-
-  for (let index = 0; index < myData.length; index++) {
-    if (myData[index].id === id) {
-      finaldata.myApply.push(myData[index]);
-    } else {
-      for (let indexs = 0; indexs < myData[index].join.length; indexs++) {
-        if (myData[index].join[indexs].id === id) {
-          finaldata.myJoin.push(myData[index]);
-        }
-      }
-    }
+  if (myData === []) {
+    finaldata.myApply = [];
+  } else {
+    finaldata.myApply = myData;
   }
-
-  res.status(200).json(finaldata);
-  */
+  if (myjoinData === []) {
+    finaldata.myJoin = [];
+  } else {
+    finaldata.myJoin = myjoinData;
+  }
+  res.status(200).render("mypage", { finaldata });
 };
 
 module.exports = {

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark black">
   <div class="container">
-    <a class="navbar-brand" href="/"><strong>Gachi.Ga</strong></a>
+    <a class="navbar-brand" href="/list"><strong>Gachi.Ga</strong></a>
     <button
       class="navbar-toggler"
       type="button"
@@ -15,10 +15,9 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/list">List</a>
+          <a class="nav-link" href="/list"
+            >Home <span class="sr-only"></span
+          ></a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -26,12 +25,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/users/login">로그인</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/users/register">디미고 계정 연동</a>
-        </li>
         <%} else{ %>
         <li class="nav-item">
-          <a class="nav-link"><%= user.name%></a>
+          <a class="nav-link" href="/mypage"><%= user.name%></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/users/logout">로그아웃</a>

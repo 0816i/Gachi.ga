@@ -5,10 +5,8 @@ const wrap = require("../middlewares/wrap");
 const { authChecker } = require("../middlewares/index");
 
 /* GET users listing. */
-router.get("/register", authChecker, wrap(ctrl.showRegisterPage));
-router.post("/register", wrap(ctrl.register));
-router.get("/login", authChecker, ctrl.showLoginPage);
 router.post("/login", wrap(ctrl.login));
 router.get("/logout", authChecker, wrap(ctrl.logout));
+router.get("/login", authChecker, wrap(ctrl.showLoginPage));
 
 module.exports = router;
