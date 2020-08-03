@@ -21,6 +21,19 @@
         margin-right: auto;
         width: 100%;
       }
+      .dimigo-button {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        padding: 10px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        margin: auto;
+        margin-top: 10px;
+        width: 100%;
+      }
     </style>
   </head>
   <body>
@@ -117,26 +130,27 @@
           <button
             id="deletebtn"
             type="button"
-            class="btn btn-danger"
-            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+            class="dimigo-button"
+            style="padding-left: 5px; padding-right: 5px;"
           >
             삭제
           </button>
         </div>
         <div class="col">
-          <a
-            href="/modify/<%=result._id%>"
-            class="btn btn-primary"
-            style="padding-left: 5px; padding-right: 5px; width: 100px;"
-            >수정</a
+          <button
+            onclick="location.href='/modify/<%=result._id%>'"
+            class="dimigo-button"
+            style="padding-left: 5px; padding-right: 5px;"
           >
+            수정
+          </button>
         </div>
         <% } else{ if(!isJoin) {%>
         <div class="col">
           <a
             id="joinbtn"
-            class="btn btn-secondary"
-            style="padding-left: 5px; padding-right: 5px; width: 100px;"
+            class="dimigo-button"
+            style="padding-left: 5px; padding-right: 5px;"
             >가입</a
           >
         </div>
@@ -145,7 +159,7 @@
           <button
             id="deletejoin"
             type="button"
-            class="btn btn-danger"
+            class="dimigo-button"
             style="padding-left: 5px; padding-right: 5px; width: 100px;"
           >
             삭제
