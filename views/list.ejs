@@ -177,10 +177,14 @@
             $(".data-list").empty();
             result.forEach((element) => {
               const date = new Date(element.date);
+              var dest = element.dest;
+              if (element.dest.length > 6) {
+                dest = element.dest.substr(0, 6) + "...";
+              }
               $(".data-list").append(
                 `<div id="${element._id}" class="data-box animated flipInX">
                   <div class="d-flex justify-content-between">
-                    <h1 class="destination">${element.dest}</h1>
+                    <h1 class="destination">${dest}</h1>
                     <h6 class="align-self-end time">
                       ${
                         (date.getMonth() + 1 < 10 ? "0" : "") +
