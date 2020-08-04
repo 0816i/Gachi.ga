@@ -41,8 +41,8 @@
     <header>
       <%- include('./general/nav') %>
     </header>
-    <form id="create_apply" class="border border-light p-5">
-      <div class="row">
+    <div id="create_apply" class="border border-light p-5">
+      <div class="row" style="margin-top: -17px;">
         <div class="col">
           <label for="_id">글쓴이</label>
           <input
@@ -54,7 +54,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <div class="row" style="margin-top: 15px;">
         <div class="col">
           <label for="_place">목적지</label>
           <input
@@ -71,9 +71,10 @@
           <div class="form-group">
             <label for="exampleFormControlTextarea2">상세 정보</label>
             <textarea
-              class="form-control rounded-0"
+              class="form-control"
               id="_detail"
               rows="10"
+              style="border-radius: 20px;"
               readonly
             >
 <%= result.detail %></textarea
@@ -109,7 +110,7 @@
           </ul>
         </div>
       </div>
-      <div class="row" style="margin-top: 10px;">
+      <div class="row" style="margin-top: 15px;">
         <div class="col">
           <label for="_place">일시</label>
           <% time = result.date.getFullYear() +"년 " + (result.date.getMonth() +
@@ -124,7 +125,7 @@
           />
         </div>
       </div>
-      <div class="row text-align-center" style="margin-top: 10px;">
+      <div class="row text-align-center" style="margin-top: 15px;">
         <% if(my === true){ %>
         <div class="col">
           <button
@@ -168,7 +169,7 @@
         </div>
         <%} }%>
       </div>
-    </form>
+    </div>
     <script>
       $(function () {
         var socket = io();

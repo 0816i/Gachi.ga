@@ -210,6 +210,21 @@ const myGodata = async (req, res, next) => {
   res.status(200).render("mypage", { finaldata });
 };
 
+const search = async (req, res, next) => {
+  const { keyword, type } = req.body;
+  if (type === "dest") {
+    const data = await Godata.find({ dest: { $regex: keyword } });
+    return res.status(200).json(data);
+  } else if (type === "serial") {
+    const data = await Godata.find({ serial: keyword });
+    return res.status(200).json(data);
+  } else if (type === "name") {
+    const data = await Godata.find({ name: keyword });
+    return res.status(200).json(data);
+  }
+  return res.status(200).json(data);
+};
+
 module.exports = {
   options,
   showMainPage,
@@ -223,4 +238,5 @@ module.exports = {
   join,
   joindelete,
   myGodata,
+  search,
 };

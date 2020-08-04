@@ -5,6 +5,9 @@
     <%- include('./general/data') %>
 
     <style>
+      * {
+        font-family: "Noto Sans KR", sans-serif;
+      }
       .data-box {
         height: 100px;
         border: 1px solid #e0e0e0;
@@ -57,6 +60,43 @@
         margin-top: 10px;
         width: 100%;
       }
+      .form-control {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        padding: 10px;
+        padding-left: 20px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        margin-left: 20px;
+        margin-right: 20px;
+        width: 100%;
+      }
+      .search-button {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        height: 38px;
+        width: 100px;
+      }
+      .d-flex {
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      #option {
+        background-color: white;
+        border: 1px;
+        border-color: grey;
+        border-style: double;
+        border-radius: 70px;
+        height: 38px;
+        width: 100px;
+      }
     </style>
   </head>
 
@@ -71,17 +111,24 @@
           <h1>귀가자 목록</h1>
         </div>
       </div>
+      <div class="row" style="margin-top: 10px;">
+        <div class="d-flex justify-content-between">
+          <select name="options" id="option">
+            <option value="dest">목적지</option>
+            <option value="name">이름</option>
+            <option value="serial">학번</option>
+          </select>
+          <input id="search" class="form-control" type="text" />
+          <button class="search-button">검색</button>
+        </div>
+      </div>
       <div class="row">
         <div class="col">
-          <button
-            class="dimigo-button animated fadeIn"
-            onclick="location.href='/apply'"
-          >
+          <button class="dimigo-button" onclick="location.href='/apply'">
             모임 만들기
           </button>
         </div>
       </div>
-
       <div class="row">
         <div class="col data-list">
           <% result.forEach((data)=>{ %>
@@ -117,6 +164,49 @@
       $(".data-box").click(function () {
         const _id = $(this).attr("id");
         location.href = `/detail/${_id}`;
+      });
+      $(".search-button").click(function () {
+        const type = $("#option").val();
+        const keyword = $("#search").val();
+        $.ajax({
+          url: "/search",
+          type: "POST",
+          data: { type, keyword },
+        })
+          .done((result) => {
+            $(".data-list").empty();
+            result.forEach((element) => {
+              const date = new Date(element.date);
+              $(".data-list").append(
+                `<div id="${element._id}" class="data-box animated flipInX">
+                  <div class="d-flex justify-content-between">
+                    <h1 class="destination">${element.dest}</h1>
+                    <h6 class="align-self-end time">
+                      ${
+                        (date.getMonth() + 1 < 10 ? "0" : "") +
+                        (date.getMonth() + 1)
+                      }월 ${
+                  (date.getDate() < 10 ? "0" : "") + date.getDate()
+                }일 ${(date.getHours() < 10 ? "0" : "") + date.getHours()}시 ${
+                  (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
+                }분
+                    </h6> 
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <h1 class="counter">
+                      ${element.now} / ${element.fill} 명
+                    </h1>
+                    <h6 class="align-self-end name">
+                      ${element.serial} ${element.name}
+                    </h6>
+                  </div>
+                </div>`
+              );
+            });
+          })
+          .fail((err) => {
+            alert("오류가 발생했습니다.");
+          });
       });
     </script>
   </body>
