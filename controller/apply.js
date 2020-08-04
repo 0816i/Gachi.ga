@@ -1,5 +1,7 @@
 const Godata = require("../models/godata");
 const { io } = require("../loaders/index");
+const user = require("./user");
+const users = require("../models/users");
 
 const options = (req, res) => {
   res.header("Allow", "GET, PUT, POST, DELETE");
@@ -229,6 +231,27 @@ const search = async (req, res, next) => {
     return res.status(200).json(data);
   }
   return res.status(200).json(data);
+};
+
+const like = async (req, res, next) => {
+  const { id } = req.params;
+  const uid = res.locals.user.id;
+  const target = await users.findOne({ id, likes: { $nin: uid } });
+  if (!target) {
+    return res.status(401).json({ message: "이미 좋아요를 누르셨습니다." });
+  }
+  const result = await users.findByIdAndUpdate(
+    target._id,
+    {
+      $push: { likes: uid },
+    },
+    { new: true }
+  );
+  if (result) {
+    return res.status(200).json({ status: true, num: result.likes.length() });
+  } else {
+    return res.status(401).json({ status: false });
+  }
 };
 
 module.exports = {

@@ -8,6 +8,7 @@ const userSchema = new Schema({
   klass: { type: Number, required: true, trim: true },
   number: { type: Number, required: true, trim: true },
   serial: { type: Number, required: true, trim: true },
+  likes: { type: Array },
 });
 
 module.exports = model("User", userSchema);
