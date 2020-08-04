@@ -213,13 +213,19 @@ const myGodata = async (req, res, next) => {
 const search = async (req, res, next) => {
   const { keyword, type } = req.body;
   if (type === "dest") {
-    const data = await Godata.find({ dest: { $regex: keyword } });
+    const data = await Godata.find({ dest: { $regex: keyword } }).sort({
+      _id: -1,
+    });
     return res.status(200).json(data);
   } else if (type === "serial") {
-    const data = await Godata.find({ serial: keyword });
+    const data = await Godata.find({ serial: keyword }).sort({
+      _id: -1,
+    });
     return res.status(200).json(data);
   } else if (type === "name") {
-    const data = await Godata.find({ name: keyword });
+    const data = await Godata.find({ name: keyword }).sort({
+      _id: -1,
+    });
     return res.status(200).json(data);
   }
   return res.status(200).json(data);
