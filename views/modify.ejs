@@ -63,82 +63,84 @@
     <header>
       <%- include('./general/nav') %>
     </header>
-    <form id="create_apply" class="p-5">
-      <div class="row" style="margin-top: -17px;">
-        <div class="col">
-          <label for="_place">목적지</label>
-          <input
-            type="text"
-            id="_place"
-            class="form-control"
-            value="<%= result.dest%>"
-            required
-          />
-        </div>
-      </div>
-      <div class="row" style="margin-top: 15px;">
-        <div class="col">
-          <div class="form-group">
-            <label for="exampleFormControlTextarea2">상세 정보</label>
-            <textarea
+    <div class="container">
+      <form id="create_apply">
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <label for="_place">목적지</label>
+            <input
+              type="text"
+              id="_place"
               class="form-control"
-              id="_detail"
-              rows="10"
+              value="<%= result.dest%>"
               required
-              style="border-radius: 20px;"
-            >
-<%= result.detail %></textarea
-            >
+            />
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label for="numberExample">최대 명수(본인 포함)</label>
-          <input
-            type="number"
-            id="_number"
-            class="form-control"
-            required
-            min="1"
-            value="<%= result.fill%>"
-          />
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea2">상세 정보</label>
+              <textarea
+                class="form-control"
+                id="_detail"
+                rows="10"
+                required
+                style="border-radius: 20px;"
+              >
+<%= result.detail %></textarea
+              >
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row" style="margin-top: 15px;">
-        <div class="col">
-          <label for="date_form">날짜</label>
-          <%console.log(`${result.date.getFullYear()}-${(result.date.getMonth()+1<10?'0':'')
-          + (result.date.getMonth()+1)}-${(result.date.getDate()<10?'0':'') +
-          result.date.getDate()}`)%>
-          <input
-            type="date"
-            id="date_form"
-            class="form-control"
-            value="<%=`${result.date.getFullYear()}-${(result.date.getMonth()+1<10?'0':'')
+        <div class="row">
+          <div class="col">
+            <label for="numberExample">최대 명수(본인 포함)</label>
+            <input
+              type="number"
+              id="_number"
+              class="form-control"
+              required
+              min="1"
+              value="<%= result.fill%>"
+            />
+          </div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <label for="date_form">날짜</label>
+            <%console.log(`${result.date.getFullYear()}-${(result.date.getMonth()+1<10?'0':'')
+            + (result.date.getMonth()+1)}-${(result.date.getDate()<10?'0':'') +
+            result.date.getDate()}`)%>
+            <input
+              type="date"
+              id="date_form"
+              class="form-control"
+              value="<%=`${result.date.getFullYear()}-${(result.date.getMonth()+1<10?'0':'')
             + (result.date.getMonth()+1)}-${(result.date.getDate()<10?'0':'')
             + result.date.getDate()}`%>"
-            required
-          />
+              required
+            />
+          </div>
+          <div class="col">
+            <label for="time_form">시간</label>
+            <input
+              type="time"
+              id="time_form"
+              class="form-control"
+              required
+              value="<%=`${(result.date.getHours()<10?'0':'') + result.date.getHours()}:${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}`%>"
+            />
+          </div>
         </div>
-        <div class="col">
-          <label for="time_form">시간</label>
-          <input
-            type="time"
-            id="time_form"
-            class="form-control"
-            required
-            value="<%=`${(result.date.getHours()<10?'0':'') + result.date.getHours()}:${(result.date.getMinutes()<10?'0':'') + result.date.getMinutes()}`%>"
-          />
+        <div class="row" style="margin-top: 15px;">
+          <div class="col">
+            <button class="dimigo-button" type="submit">
+              수정하기
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="row" style="margin-top: 15px;">
-        <div class="col">
-          <button class="dimigo-button animated fadeIn" type="submit">
-            수정하기
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </body>
 </html>
