@@ -86,8 +86,11 @@
       <h1 style="font-size: 25pt; margin-top: 40px;">내가 신청한 모임</h1>
       <% for (let index = 0; index < finaldata.myJoin.length; index++) { %>
       <%if(finaldata.myJoin[index].id !== user.id){%>
-      <div id="<%=`${finaldata.myJoin[index]._id}`%>" class="data-box">
-        <div class="d-flex justify-content-between animated flipInX">
+      <div
+        id="<%=`${finaldata.myJoin[index]._id}`%>"
+        class="data-box animated flipInX"
+      >
+        <div class="d-flex justify-content-between">
           <% if(finaldata.myJoin[index].dest.length > 6){ %>
           <h1 class="destination">
             <%=`${finaldata.myJoin[index].dest.substr(0,6)}...`%>
