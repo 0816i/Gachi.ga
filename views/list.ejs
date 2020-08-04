@@ -132,7 +132,10 @@
       <div class="row">
         <div class="col data-list">
           <% result.forEach((data)=>{ %>
-          <div id="<%=data._id%>" class="data-box animated flipInX">
+          <div
+            onclick="location.href='/detail/<%=data._id%>'"
+            class="data-box animated flipInX"
+          >
             <div class="d-flex justify-content-between">
               <% if(data.dest.length > 6){ %>
               <h1 class="destination"><%=`${data.dest.substr(0,6)}...`%></h1>
@@ -161,10 +164,6 @@
       </div>
     </div>
     <script>
-      $(".data-box").click(function () {
-        const _id = $(this).attr("id");
-        location.href = `/detail/${_id}`;
-      });
       $(".search-button").click(function () {
         const type = $("#option").val();
         const keyword = $("#search").val();
@@ -182,7 +181,9 @@
                 dest = element.dest.substr(0, 6) + "...";
               }
               $(".data-list").append(
-                `<div id="${element._id}" class="data-box animated flipInX">
+                `<div class="data-box animated flipInX" onclick="location.href='/detail/${
+                  element._id
+                }'">
                   <div class="d-flex justify-content-between">
                     <h1 class="destination">${dest}</h1>
                     <h6 class="align-self-end time">
