@@ -19,7 +19,7 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "require": "^2.4.20",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "ws": "^7.3.1"
   }
 }
