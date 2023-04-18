@@ -9,7 +9,7 @@ const getToken = async (dimigoid, dimigopw) => {
     uri: "https://api.dimigo.in/auth",
     method: "POST",
     body: {
-      id: dimigoid,
+      username: dimigoid,
       password: dimigopw,
     },
     json: true,
@@ -21,6 +21,7 @@ const getToken = async (dimigoid, dimigopw) => {
     if (err.statusCode === 404) {
       return false;
     }
+    console.log(err);
   }
 };
 
